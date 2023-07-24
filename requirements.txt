@@ -6,3 +6,6 @@ PyAutoGUI~=0.9.54
 pandas~=2.0.3
 selenium~=4.10.0
 gTTS~=2.3.2
+chatgpt~=2.2212.0
+requests~=2.31.0
+playsound~=1.2.2

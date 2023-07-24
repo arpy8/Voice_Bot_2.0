@@ -1,22 +1,11 @@
-import random
-
-import pyttsx3
-from utils import *
-from config import *
+from chatGPT import chatGPT
 from camera import *
 from message import *
+from jokes import dad_joke
 import pyautogui as pg
 import speech_recognition as sr
 
 r = sr.Recognizer()
-engine = pyttsx3.init("dummy")
-voice = engine.getProperty('voices')[1]
-engine.setProperty('voice', voice.id)
-GREETINGS = [f"Hello Mr. {NAME}",
-             "yeah?",
-             "Well, hello there, Master of Puns and Jokes - how's it going today?",
-             f"Ahoy there, Captain {NAME}! How's the ship sailing?",
-             f"Bonjour, Monsieur {NAME}! Comment ça va? Wait, why the hell am I speaking French?"]
 
 
 def custom_call(source):
@@ -28,7 +17,7 @@ def custom_call(source):
 
 
 def listen_for_wake_word(source):
-    print("Listening for 'Hey'...")
+    print("Bot: Listening for the wake word ...")
 
     while True:
         audio = r.listen(source)
@@ -37,12 +26,15 @@ def listen_for_wake_word(source):
             text_list = [word.lower() for word in text.lower().split()]
             print(text_list)
             if "hey" or "hi" or "hello" or "over" in text_list:
-                print("Wake word detected.")
+                print("Bot: Wake word detected.")
+                # play_sound("assets/init.mp3")
                 SpeakText(random.choice(GREETINGS))
                 listen_and_respond(source)
                 break
         except sr.UnknownValueError:
             pass
+        except AssertionError:
+            print(text_list)
 
 
 def listen_and_respond(source):
@@ -78,9 +70,9 @@ def listen_and_respond(source):
                 else:
                     speak_print("What message should I send?")
                     send_whatsapp(phone, custom_call(source))
-                    speak_print("Message sent successfully.\n")
+                    speak_print("Message sent successfully\n")
 
-            elif "camera" in text_list or "click" in text_list:
+            elif ("camera" and "open") in text_list or "click" in text_list or "picture" in text_list:
                 speak_print("Opening camera\n")
                 click_picture()
 
@@ -88,9 +80,12 @@ def listen_and_respond(source):
                 speak_print("Opening gallery\n")
                 open_gallery()
 
+            elif ("joke" and "dad") in text_list:
+                dad_joke()
+
             else:
-                # gonna embed chatgpt here
-                speak_print(text)
+                gpt_reply = chatGPT(text)
+                speak_print(gpt_reply)
 
         except sr.UnknownValueError:
             print("Silence found, shutting up, listening...")
@@ -102,6 +97,11 @@ def listen_and_respond(source):
             listen_for_wake_word(source)
             break
 
+        # except AssertionError as e:
+        #     print(f"Could not request results; {e}")
+        #     listen_for_wake_word(source)
+        #     break
 
-with sr.Microphone(device_index=1) as source:
+
+with sr.Microphone() as source:
     listen_for_wake_word(source)

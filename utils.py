@@ -4,18 +4,27 @@ import playsound
 import pyautogui as pg
 
 
+def play_sound(path):
+    playsound.playsound(path)
+
+
 def SpeakText(text, lang="en"):
-    sound = gtts.gTTS(str(text), lang=lang)
+    sound = gtts.gTTS(str(text), lang=lang, tld="us")
     sound.save("assets/temp.mp3")
     playsound.playsound("assets/temp.mp3")
     os.remove("assets/temp.mp3")
 
 
 def speak_print(text):
+    print(text)
     if "\n" in text:
         text.replace("\n", "")
         SpeakText(text)
-    print(text)
+    elif "Bot: " in text:
+        text.replace("Bot: ", "")
+        SpeakText(text)
+    else:
+        SpeakText(text)
 
 
 def whatsapp_close_tab():
@@ -43,4 +52,3 @@ def shutdown():
     pg.hotkey('ctrl', 'win', 'd')
     pg.hotkey('alt', 'f4')
     pg.press('enter')
-

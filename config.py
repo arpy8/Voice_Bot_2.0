@@ -3,9 +3,9 @@ import os
 NAME = "Arpit"
 GREETINGS = [f"Hello Mr. {NAME}",
              "yeah? what's up?",
-             "Well, hello there, Master of Puns and Jokes - how's it going today?",
-             f"Namaste, {NAME} ji! Mai aapki kaise sewa kar skti hu",
-             f"Bonjour, Monsieur {NAME}! Comment ça va? Wait, why the hell am I speaking French?"]
+             "Well, hello there boss",
+             f"Namaste, {NAME} ji! Hope you're doing amazing",
+             ]
 
 # Email configuration
 SMTP_SERVER = 'smtp.gmail.com'
@@ -13,4 +13,13 @@ SMTP_MAIL = 'arpitsengar99@gmail.com'
 SMTP_PASSWORD = os.getenv("GMAIL_APP_PASS")
 
 # GPT configuration
-GPT_API = os.getenv("OPENAI_API")
+GPT_KEY = os.getenv("OPENAI_API")
+PREDEFINED_PROMPT = os.getenv("GPT_PROMPT")
+
+# Dad Joke configuration
+RAPID_API = os.getenv("RapidAPI")
+JOKES_URL = "https://dad-jokes.p.rapidapi.com/random/joke"
+HEADERS = {
+    "X-RapidAPI-Key": RAPID_API,
+    "X-RapidAPI-Host": "dad-jokes.p.rapidapi.com"
+}
