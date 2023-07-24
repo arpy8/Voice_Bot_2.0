@@ -1,5 +1,6 @@
 import time
 import pyautogui as pg
+from utils import close_application
 
 
 # Camera functions
@@ -13,6 +14,7 @@ def click_picture(number_of_photos=1, timer=1.5):
     for _ in range(number_of_photos):
         pg.press("space")
         time.sleep(0.3)
+    close_application()
 
 
 def open_gallery():
@@ -24,6 +26,3 @@ def open_gallery():
     for _ in range(19):
         pg.press("tab")
     pg.press("space")
-
-
-

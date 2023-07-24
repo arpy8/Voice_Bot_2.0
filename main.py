@@ -1,21 +1,22 @@
-import time
+import random
+
 import pyttsx3
-import numpy as np
+from utils import *
+from config import *
+from camera import *
+from message import *
 import pyautogui as pg
 import speech_recognition as sr
-from misc import contact_extractor
-from message import send_whatsapp
 
 r = sr.Recognizer()
 engine = pyttsx3.init("dummy")
 voice = engine.getProperty('voices')[1]
 engine.setProperty('voice', voice.id)
-name = "Arpit"
-greetings = [f"Hello Mr. {name}",
+GREETINGS = [f"Hello Mr. {NAME}",
              "yeah?",
              "Well, hello there, Master of Puns and Jokes - how's it going today?",
-             f"Ahoy there, Captain {name}! How's the ship sailing?",
-             f"Bonjour, Monsieur {name}! Comment ça va? Wait, why the hell am I speaking French?"]
+             f"Ahoy there, Captain {NAME}! How's the ship sailing?",
+             f"Bonjour, Monsieur {NAME}! Comment ça va? Wait, why the hell am I speaking French?"]
 
 
 def custom_call(source):
@@ -33,11 +34,11 @@ def listen_for_wake_word(source):
         audio = r.listen(source)
         try:
             text = r.recognize_google(audio)
-            print(text.lower().split(" "))
-            if "hey" or "hi" or "hello" or "over" in text.lower().split():
+            text_list = [word.lower() for word in text.lower().split()]
+            print(text_list)
+            if "hey" or "hi" or "hello" or "over" in text_list:
                 print("Wake word detected.")
-                engine.say(greetings[0])
-                engine.runAndWait()
+                SpeakText(random.choice(GREETINGS))
                 listen_and_respond(source)
                 break
         except sr.UnknownValueError:
@@ -45,44 +46,62 @@ def listen_for_wake_word(source):
 
 
 def listen_and_respond(source):
-    while True:
-        audio = r.listen(source)
-        try:
-            print("Listening...")
-            text = r.recognize_google(audio)
-            text_list = text.split()
-            print(f"You : {text}")
+    r = sr.Recognizer()
 
-# --------  CONDITIONS GOES HERE --------
+    while True:
+        print("Listening...")
+        audio = r.listen(source)
+
+        try:
+            text = r.recognize_google(audio)
+            print(f"You: {text}")
+
             if not text:
                 continue
+
+            text_list = text.split()
+
             if "pause" in text_list:
+                speak_print("Session paused\n")
                 listen_for_wake_word(source)
+
             if not audio:
                 listen_for_wake_word(source)
 
-            if "write" or "type" in text_list:
+            if "write" in text_list or "type" in text_list:
                 pg.write(text)
-            elif "whatsapp" or "contact" in text_list:
+
+            elif "whatsapp" in text.lower() or "contact" in text.lower():
                 phone = contact_extractor(text)
-                if phone == "None":
+                if phone is None:
                     print("Invalid contact")
-                print("speak your message")
-                send_whatsapp(phone, custom_call(source))
+                else:
+                    speak_print("What message should I send?")
+                    send_whatsapp(phone, custom_call(source))
+                    speak_print("Message sent successfully.\n")
+
+            elif "camera" in text_list or "click" in text_list:
+                speak_print("Opening camera\n")
+                click_picture()
+
+            elif "gallery" in text_list:
+                speak_print("Opening gallery\n")
+                open_gallery()
+
             else:
-                print(text)
+                # gonna embed chatgpt here
+                speak_print(text)
+
         except sr.UnknownValueError:
-            time.sleep(2)
             print("Silence found, shutting up, listening...")
             listen_for_wake_word(source)
             break
+
         except sr.RequestError as e:
             print(f"Could not request results; {e}")
-            engine.say(f"Could not request results; {e}")
-            engine.runAndWait()
             listen_for_wake_word(source)
             break
 
 
-with sr.Microphone(device_index=3) as source:
+with sr.Microphone(device_index=1) as source:
     listen_for_wake_word(source)
