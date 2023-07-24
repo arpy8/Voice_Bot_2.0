@@ -1,17 +1,10 @@
-import os
 import time
-import openai
 import pyttsx3
 import numpy as np
-from dotenv import load_dotenv
+import pyautogui as pg
 import speech_recognition as sr
-
-# mytext = 'Welcome to me'
-# language = 'en'
-#
-# openai.api_key = os.getenv("OPENAI_API")
-# load_dotenv()
-# model = 'gpt-3.5-turbo'
+from misc import contact_extractor
+from message import send_whatsapp
 
 r = sr.Recognizer()
 engine = pyttsx3.init("dummy")
@@ -25,6 +18,14 @@ greetings = [f"Hello Mr. {name}",
              f"Bonjour, Monsieur {name}! Comment ça va? Wait, why the hell am I speaking French?"]
 
 
+def custom_call(source):
+    audio = r.listen(source)
+    try:
+        return r.recognize_google(audio)
+    except sr.UnknownValueError:
+        pass
+
+
 def listen_for_wake_word(source):
     print("Listening for 'Hey'...")
 
@@ -32,9 +33,10 @@ def listen_for_wake_word(source):
         audio = r.listen(source)
         try:
             text = r.recognize_google(audio)
-            if "hey" or "hi" in text.lower():
+            print(text.lower().split(" "))
+            if "hey" or "hi" or "hello" or "over" in text.lower().split():
                 print("Wake word detected.")
-                engine.say(np.random.choice(greetings))
+                engine.say(greetings[0])
                 engine.runAndWait()
                 listen_and_respond(source)
                 break
@@ -42,18 +44,33 @@ def listen_for_wake_word(source):
             pass
 
 
-# Listen for input and respond with OpenAI API
 def listen_and_respond(source):
-    print("Listening...")
     while True:
         audio = r.listen(source)
         try:
+            print("Listening...")
             text = r.recognize_google(audio)
-            print(f"You said: {text}")
+            text_list = text.split()
+            print(f"You : {text}")
+
+# --------  CONDITIONS GOES HERE --------
             if not text:
                 continue
+            if "pause" in text_list:
+                listen_for_wake_word(source)
             if not audio:
                 listen_for_wake_word(source)
+
+            if "write" or "type" in text_list:
+                pg.write(text)
+            elif "whatsapp" or "contact" in text_list:
+                phone = contact_extractor(text)
+                if phone == "None":
+                    print("Invalid contact")
+                print("speak your message")
+                send_whatsapp(phone, custom_call(source))
+            else:
+                print(text)
         except sr.UnknownValueError:
             time.sleep(2)
             print("Silence found, shutting up, listening...")
@@ -67,27 +84,5 @@ def listen_and_respond(source):
             break
 
 
-# Use the default microphone as the audio source
-with sr.Microphone() as source:
+with sr.Microphone(device_index=3) as source:
     listen_for_wake_word(source)
-
-
-
-# --- text to audio ----
-# print(response_text)
-# print("generating audio")
-# myobj = gTTS(text=response_text, lang=language, slow=False)
-# myobj.save("response.mp3")
-# print("speaking")
-# os.system("vlc response.mp3")
-# # Speak the response
-# print("speaking")
-# engine.say(response_text)
-# engine.runAndWait()
-
-
-# --- chat gpt ----
- # Send input to OpenAI API
-# response = openai.ChatCompletion.create(model="gpt-3.5-turbo",
-#                                         messages=[{"role": "user", "content": f"{text}"}])
-# response_text = response.choices[0].message.content

@@ -4,7 +4,7 @@ import smtplib
 import webbrowser
 import urllib.parse
 import pyautogui as pg
-from misc import whatsapp_close_tab
+from misc import *
 
 # CONSTANTS
 MY_EMAIL = "arpitsengar99@gmail.com"
@@ -23,17 +23,23 @@ def send_mail(email, pswd):
     print("\nmessage sent successfully!")
 
 
-def send_whatsapp():
-    phn = input("recipient's number: ")
-    message = urllib.parse.quote(input("message: "))
-    url = f"https://wa.me/91{phn}?text={message}"
-    webbrowser.open(url)
-    time.sleep(1.5)
-    pg.click(x=760, y=1050)
-    pg.press("enter")
-    whatsapp_close_tab()
-    pg.click(x=760, y=1050)
-    pg.press("enter")
+def send_whatsapp(phone, message):
+    try:
+        url_message = urllib.parse.quote(message)
+
+        webbrowser.open(f"https://wa.me/91{phone}?text={url_message}")
+        time.sleep(5)
+        pg.click(x=760, y=1050)
+        pg.press("enter")
+        time.sleep(1.5)
+        whatsapp_close_tab()
+        pg.click(x=760, y=1050)
+        pg.press("enter")
+        time.sleep(0.5)
+        close_application()
+        print("\n message sent successfully")
+
+    except TypeError:
+        pass
 
 
-send_whatsapp()
