@@ -23,7 +23,7 @@ def send_mail(recp_email, message):
 
 
 def send_whatsapp(phone, message):
-    url_message = urllib.parse.quote(message)
+    url_message = urllib.parse.quote(str(message))
     whatsapp_url = f"https://wa.me/91{phone}?text={url_message}"
 
     driver = webdriver.Chrome()
@@ -47,7 +47,7 @@ def send_whatsapp(phone, message):
 
 
 def send_whatsapp2(phone, message):
-    url_message = urllib.parse.quote(message)
+    url_message = urllib.parse.quote(str(message))
     whatsapp_url = f"https://wa.me/91{phone}?text={url_message}"
     try:
         webbrowser.open(whatsapp_url)
@@ -61,7 +61,7 @@ def send_whatsapp2(phone, message):
         whatsapp_close_tab()
 
         pg.click(*send_button_pos)
-        time.sleep(0.5)
+        time.sleep(2)
         pg.press("enter")
 
         close_application()

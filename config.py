@@ -1,10 +1,14 @@
 import os
+import toml
 
-NAME = "Arpit"
+toml_file_path = "assets/name.toml"
+
+NAME = toml.load(open(toml_file_path, "r"))['NAME']
 GREETINGS = [f"Hello Mr. {NAME}",
              "yeah? what's up?",
              "Well, hello there boss",
              f"Namaste, {NAME} ji! Hope you're doing amazing",
+             f"Hello {NAME}, "
              ]
 
 # Email configuration
@@ -23,3 +27,7 @@ HEADERS = {
     "X-RapidAPI-Key": RAPID_API,
     "X-RapidAPI-Host": "dad-jokes.p.rapidapi.com"
 }
+
+DICTIONARY_URL = "https://api.dictionaryapi.dev/api/v2/entries/en/"
+GENDER_URL = "https://api.genderize.io?name="
+

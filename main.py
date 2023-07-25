@@ -5,16 +5,6 @@ from jokes import dad_joke
 import pyautogui as pg
 import speech_recognition as sr
 
-r = sr.Recognizer()
-
-
-def custom_call(source):
-    audio = r.listen(source)
-    try:
-        return r.recognize_google(audio)
-    except sr.UnknownValueError:
-        pass
-
 
 def listen_for_wake_word(source):
     print("Bot: Listening for the wake word ...")
@@ -55,9 +45,11 @@ def listen_and_respond(source):
 
             if "pause" in text_list:
                 speak_print("Session paused\n")
+                play_sound("assets/swoosh.mp3")
                 listen_for_wake_word(source)
 
             if not audio:
+                play_sound("assets/swoosh.mp3")
                 listen_for_wake_word(source)
 
             if "write" in text_list or "type" in text_list:
@@ -73,34 +65,32 @@ def listen_and_respond(source):
                     speak_print("Message sent successfully\n")
 
             elif ("camera" and "open") in text_list or "click" in text_list or "picture" in text_list:
-                speak_print("Opening camera\n")
                 click_picture()
 
-            elif "gallery" in text_list:
-                speak_print("Opening gallery\n")
+            elif ("open" and "gallery") in text_list:
                 open_gallery()
 
             elif ("joke" and "dad") in text_list:
                 dad_joke()
+
+            elif ("change" and "name") in text_list:
+                update_name()
 
             else:
                 gpt_reply = chatGPT(text)
                 speak_print(gpt_reply)
 
         except sr.UnknownValueError:
-            print("Silence found, shutting up, listening...")
+            print("Silence found, shutting up")
+            play_sound("assets/swoosh.mp3")
             listen_for_wake_word(source)
             break
 
         except sr.RequestError as e:
             print(f"Could not request results; {e}")
+            play_sound("assets/swoosh.mp3")
             listen_for_wake_word(source)
             break
-
-        # except AssertionError as e:
-        #     print(f"Could not request results; {e}")
-        #     listen_for_wake_word(source)
-        #     break
 
 
 with sr.Microphone() as source:

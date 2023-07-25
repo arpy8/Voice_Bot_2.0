@@ -1,11 +1,12 @@
 import random
 import time
 import pyautogui as pg
-from utils import close_application, SpeakText, play_sound
+from utils import close_application, SpeakText, play_sound, speak_print
 
 
 # Camera functions
 def click_picture(number_of_photos=1, timer=1.5):
+    speak_print("Opening camera\n")
     time.sleep(0.2)
     pg.press("win")
     time.sleep(0.3)
@@ -24,6 +25,7 @@ def click_picture(number_of_photos=1, timer=1.5):
 
 
 def open_gallery():
+    speak_print("Opening gallery\n")
     time.sleep(0.2)
     pg.press("win")
     time.sleep(0.3)

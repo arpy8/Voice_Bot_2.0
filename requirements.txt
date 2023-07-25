@@ -9,3 +9,4 @@ gTTS~=2.3.2
 chatgpt~=2.2212.0
 requests~=2.31.0
 playsound~=1.2.2
+toml~=0.10.2
