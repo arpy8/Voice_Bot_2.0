@@ -1,8 +1,10 @@
-from chatGPT import chatGPT
+import datetime
 from camera import *
 from message import *
-from jokes import dad_joke
 import pyautogui as pg
+from jokes import dad_joke
+from clock import set_timer
+from chatGPT import chatGPT
 import speech_recognition as sr
 
 
@@ -76,6 +78,18 @@ def listen_and_respond(source):
             elif ("change" and "name") in text_list:
                 update_name()
 
+            elif ("set" and "reminder") in text_list:
+                set_timer(text_list)
+
+            elif ("time" and "the") in text_list:
+                speak_print(f"""It's {datetime.now().strftime("%H:%M")} right now.""")
+
+            elif (("play" or "spotify") and "song") in text_list:
+                play_song(text_list)
+
+            elif ("shutdown" and "system") in text_list:
+                shutdown()
+
             else:
                 gpt_reply = chatGPT(text)
                 speak_print(gpt_reply)
@@ -93,5 +107,9 @@ def listen_and_respond(source):
             break
 
 
-with sr.Microphone(device_index=1) as source:
-    listen_for_wake_word(source)
+try:
+    with sr.Microphone(device_index=3) as source:
+        listen_for_wake_word(source)
+except AssertionError:
+    with sr.Microphone(device_index=1) as source:
+        listen_for_wake_word(source)

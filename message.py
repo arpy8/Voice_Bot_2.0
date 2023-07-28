@@ -1,19 +1,25 @@
 import time
 import smtplib
-import webbrowser
+import urllib.parse
 from utils import *
-import urllib.parse
-import urllib.parse
 from config import *
-import pyautogui as pg
 from selenium import webdriver
 from selenium.webdriver.common.by import By
-from selenium.common.exceptions import NoSuchElementException
 
 
 def contact_extractor(string):
     phn = "".join([char for char in string if char.isdigit()])
-    return phn if len(phn) == 10 else phn[:10] if len(phn) > 10 else None
+    if len(phn) == 10:
+        print(f"accepted, {phn}")
+        return phn
+    elif len(phn) > 10:
+        print(f"accepted, {phn}")
+        return phn[:10]
+    else:
+        speak_print("No number detected. Please speak the number again")
+        phone_number = custom_listen()
+        print(phone_number)
+        contact_extractor(phone_number)
 
 
 def email_extractor(string):
@@ -42,42 +48,53 @@ def send_whatsapp(phone, message):
     driver.get(whatsapp_url)
     pg.press("tab")
     pg.press("space")
-    try:
-        driver.find_element(By.XPATH, '//*[@id="action-button"]/span').click()
-
-    except NoSuchElementException:
-        return "Button not found"
-    time.sleep(1)
+    driver.find_element(By.XPATH, '//*[@id="action-button"]/span').click()
+    time.sleep(2.5)
     pg.click(x=1089, y=273)
-    time.sleep(1)
+    time.sleep(3)
     pg.click(760, 1050)
     pg.press("enter")
-    time.sleep(1.5)
+    time.sleep(2)
 
     pg.hotkey("alt", "f4")
 
+# def send_whatsapp2(phone, message):
+#     url_message = urllib.parse.quote(str(message))
+#     whatsapp_url = f"https://wa.me/91{phone}?text={url_message}"
+#     try:
+#         webbrowser.open(whatsapp_url)
+#         time.sleep(10)
+#
+#         send_button_pos = (760, 1050)
+#         pg.click(*send_button_pos)
+#         pg.press("enter")
+#         time.sleep(1.5)
+#
+#         whatsapp_close_tab()
+#
+#         pg.click(*send_button_pos)
+#         time.sleep(4)
+#         pg.press("enter")
+#
+#         close_application()
+#
+#         print("\nMessage sent successfully")
+#
+#     except Exception as e:
+#         print(f"\nError occurred while sending the message: {e}")
 
-def send_whatsapp2(phone, message):
-    url_message = urllib.parse.quote(str(message))
-    whatsapp_url = f"https://wa.me/91{phone}?text={url_message}"
-    try:
-        webbrowser.open(whatsapp_url)
-        time.sleep(8)
 
-        send_button_pos = (760, 1050)
-        pg.click(*send_button_pos)
-        pg.press("enter")
-        time.sleep(1.5)
-
-        whatsapp_close_tab()
-
-        pg.click(*send_button_pos)
-        time.sleep(2)
-        pg.press("enter")
-
-        close_application()
-
-        print("\nMessage sent successfully")
-
-    except Exception as e:
-        print(f"\nError occurred while sending the message: {e}")
+# def send_whatsapp3(hour_delay=0, minute_delay=0, second_delay=3):
+#     speak_print('Okay, please speak the phone number')
+#     phone_number = contact_extractor(custom_listen())
+#     print(phone_number)
+#     speak_print("what message should I send?")
+#     message = custom_listen()
+#
+#     now = datetime.now().strftime("%H%M%S")
+#     current_hour = now[:2]
+#     current_minute = now[2:4]
+#     current_second = now[4:]
+#     wt.sendwhatmsg(phone_number, message, (int(current_hour) + int(hour_delay)),
+#                    (int(current_minute) + int(minute_delay)),
+#                    (int(current_second) + int(second_delay)), True, 2)

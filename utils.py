@@ -15,6 +15,18 @@ def custom_call(source):
         pass
 
 
+def custom_listen():
+    try:
+        with sr.Microphone(device_index=3) as source:
+            text = custom_call(source)
+            if not None: return text
+    except AttributeError:
+        with sr.Microphone(device_index=1) as source:
+            text = custom_call(source)
+            if not None: return text
+
+
+
 def play_sound(path):
     playsound.playsound(path)
 
@@ -44,12 +56,6 @@ def whatsapp_close_tab():
     pg.hotkey('ctrl', 'w')
 
 
-
-
-
-
-
-
 def close_application():
     pg.hotkey("alt", "f4")
 
@@ -58,13 +64,3 @@ def shutdown():
     pg.hotkey('ctrl', 'win', 'd')
     pg.hotkey('alt', 'f4')
     pg.press('enter')
-
-
-
-# def custom_call(source):
-#     r = sr.Recognizer()
-#     audio = r.listen(source)
-#     text = r.recognize_google(audio)
-#     return text
-#
-#
