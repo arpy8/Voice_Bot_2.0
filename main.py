@@ -67,7 +67,7 @@ def listen_and_respond(source):
             elif ("camera" and "open") in text_list or "click" in text_list or "picture" in text_list:
                 click_picture()
 
-            elif ("open" and "gallery") in text_list:
+            elif "gallery" in text_list:
                 open_gallery()
 
             elif ("joke" and "dad") in text_list:
@@ -93,5 +93,5 @@ def listen_and_respond(source):
             break
 
 
-with sr.Microphone() as source:
+with sr.Microphone(device_index=1) as source:
     listen_for_wake_word(source)

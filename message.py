@@ -11,6 +11,17 @@ from selenium.webdriver.common.by import By
 from selenium.common.exceptions import NoSuchElementException
 
 
+def contact_extractor(string):
+    phn = "".join([char for char in string if char.isdigit()])
+    return phn if len(phn) == 10 else phn[:10] if len(phn) > 10 else None
+
+
+def email_extractor(string):
+    for word in string.split(" "):
+        if "@" in str(word) and ".com" in str(word):
+            return word
+
+
 def send_mail(recp_email, message):
     with smtplib.SMTP(SMTP_SERVER) as connection:
         connection.starttls()
@@ -70,5 +81,3 @@ def send_whatsapp2(phone, message):
 
     except Exception as e:
         print(f"\nError occurred while sending the message: {e}")
-
-

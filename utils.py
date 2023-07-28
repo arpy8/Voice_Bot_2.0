@@ -44,15 +44,10 @@ def whatsapp_close_tab():
     pg.hotkey('ctrl', 'w')
 
 
-def contact_extractor(string):
-    phn = "".join([char for char in string if char.isdigit()])
-    return phn if len(phn) == 10 else phn[:10] if len(phn) > 10 else None
 
 
-def email_extractor(string):
-    for word in string.split(" "):
-        if "@" in str(word) and ".com" in str(word):
-            return word
+
+
 
 
 def close_application():
