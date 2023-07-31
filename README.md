@@ -1,5 +1,7 @@
 # Voice Assistant
 
+![banner](assets/banner.png)
+
 This is a simple voice assistant script written in Python that can perform various tasks based on voice commands. The script uses the SpeechRecognition library to convert speech to text and then responds accordingly. The assistant can perform tasks like sending WhatsApp messages, opening the camera, telling jokes, setting reminders, playing songs on Spotify, and more.
 
 ## Prerequisites
