@@ -1,4 +1,4 @@
-import datetime
+from datetime import datetime
 from camera import *
 from message import *
 import pyautogui as pg
@@ -6,25 +6,24 @@ from jokes import dad_joke
 from clock import set_timer
 from chatGPT import chatGPT
 import speech_recognition as sr
-from spotify import *
 
 playing_song = False
 
 
-def listen_for_wake_word(source, recognizer):
+def listen_for_wake_word(source):
     print("Bot: Listening for the wake word ...")
 
     while True:
-        audio = recognizer.listen(source)
+        audio = r.listen(source)
         try:
-            text = recognizer.recognize_google(audio)
+            text = r.recognize_google(audio)
             text_list = [word.lower() for word in text.lower().split()]
             print(text_list)
-            wake_words = ["hey", "hi", "hello", "over"]
-            if any(word in text_list for word in wake_words):
+            if any(word in text_list for word in ["hey", "hi", "hello", "over"]):
                 print("Bot: Wake word detected.")
+                # play_sound("assets/init.mp3")
                 SpeakText(random.choice(GREETINGS))
-                listen_and_respond(source, recognizer)
+                listen_and_respond(source)
                 break
         except sr.UnknownValueError:
             pass
@@ -32,13 +31,15 @@ def listen_for_wake_word(source, recognizer):
             print(text_list)
 
 
-def listen_and_respond(source, recognizer):
+def listen_and_respond(source):
+    r = sr.Recognizer()
+
     while True:
         print("Listening...")
-        audio = recognizer.listen(source)
+        audio = r.listen(source)
 
         try:
-            text = recognizer.recognize_google(audio)
+            text = r.recognize_google(audio)
             print(f"You: {text}")
 
             if not text:
@@ -47,9 +48,13 @@ def listen_and_respond(source, recognizer):
             text_list = text.split()
 
             if "pause" in text_list:
-                print("Bot: Session paused")
+                speak_print("Session paused\n")
                 play_sound("assets/swoosh.mp3")
-                listen_for_wake_word(source, recognizer)
+                listen_for_wake_word(source)
+
+            if not audio:
+                play_sound("assets/swoosh.mp3")
+                listen_for_wake_word(source)
 
             if "write" in text_list or "type" in text_list:
                 pg.write(text)
@@ -57,11 +62,11 @@ def listen_and_respond(source, recognizer):
             elif "whatsapp" in text.lower() or "contact" in text.lower():
                 phone = contact_extractor(text)
                 if phone is None:
-                    print("Bot: Invalid contact")
+                    print("Invalid contact")
                 else:
-                    print("Bot: What message should I send?")
+                    speak_print("What message should I send?")
                     send_whatsapp(phone, custom_call(source))
-                    print("Bot: Message sent successfully")
+                    speak_print("Message sent successfully\n")
 
             elif any(word in text_list for word in ["camera", "open", "click", "picture"]):
                 click_picture()
@@ -79,46 +84,49 @@ def listen_and_respond(source, recognizer):
                 set_timer(text_list)
 
             elif any(word in text_list for word in ["time", "right"]):
-                speak_print(f"It's {datetime.datetime.now().strftime('%H:%M')} right now.")
+                speak_print(f"""It's {datetime.now().strftime("%H:%M")} right now.""")
 
             elif any((word in text_list) for word in ["play", "spotify", "song"]):
-                global playing_song
-                playing_song = True
                 play_song(text_list)
 
             elif any(word in text_list for word in ["shutdown", "system"]):
                 shutdown()
-
-            elif "pause" in text_list:
-                pause_song()
 
             else:
                 gpt_reply = chatGPT(text)
                 speak_print(gpt_reply)
 
         except sr.UnknownValueError:
-            print("Bot: Silence found, shutting up")
+            print("Silence found, shutting up")
             play_sound("assets/swoosh.mp3")
-            listen_for_wake_word(source, recognizer)
+            listen_for_wake_word(source)
             break
 
         except sr.RequestError as e:
-            print(f"Bot: Could not request results; {e}")
+            print(f"Could not request results; {e}")
             play_sound("assets/swoosh.mp3")
-            listen_for_wake_word(source, recognizer)
+            listen_for_wake_word(source)
             break
 
 
 def main():
-    recognizer = sr.Recognizer()
     try:
         with sr.Microphone(device_index=3) as source:
-            listen_for_wake_word(source, recognizer)
+            listen_for_wake_word(source)
     except Exception:
-        print("No headphones detected. Switching mic")
+        print("Seems like your headphones aren't connected. Switching mic")
         with sr.Microphone() as source:
-            listen_for_wake_word(source, recognizer)
+            listen_for_wake_word(source)
 
 
 if __name__ == "__main__":
     main()
+
+# try:
+#     with sr.Microphone(device_index=3) as source:
+#         listen_for_wake_word(source)
+# except Exception:
+#     speak_print("Seems like your headphones aren't connected. Switching mic\n")
+#     with sr.Microphone() as source:
+#         listen_for_wake_word(source)
+
