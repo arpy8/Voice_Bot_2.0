@@ -1,6 +1,6 @@
 # Voice Command Using Google's Speech Recognition API and Python Libraries
 
-![Voice Command](banner.png)
+![Voice Command](assets/banner.png)
 
 ## Table of Contents
 
