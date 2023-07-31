@@ -1,86 +1,65 @@
-# Voice Command Using Google's Speech Recognition API and Python Libraries
+# Voice Assistant
 
-![Voice Command](assets/banner.png)
+This is a simple voice assistant script written in Python that can perform various tasks based on voice commands. The script uses the SpeechRecognition library to convert speech to text and then responds accordingly. The assistant can perform tasks like sending WhatsApp messages, opening the camera, telling jokes, setting reminders, playing songs on Spotify, and more.
 
-## Table of Contents
+## Prerequisites
 
-1. [Introduction](#Introduction)
-2. [Installation](#installation)
-3. [Prerequisites](#prerequisites)
-4. [Usage](#usage)
-5. [Supported Commands](#supported-commands)
-6. [Customization](#customization)
-7. [License](#license)
+Before running the voice assistant, make sure you have the following libraries installed:
 
-## 1. Introduction
+- `pyautogui`: Used for simulating keyboard input to write or type text.
+- `speech_recognition`: Used for speech recognition and converting speech to text.
+- `pyttsx3`: Used for text-to-speech conversion to provide audio responses.
+- `pygame`: Used for playing sound effects.
+- `spotipy`: Used for controlling the Spotify app to play songs.
 
-This project is a Voice Command application that utilizes Google's Speech Recognition API and various Python libraries to process and execute spoken commands. It allows users to interact with their computer using voice commands, enabling hands-free operation for various tasks.
+## Setup
 
-The application provides a simple interface for capturing audio input, processing it through Google's Speech Recognition API, and executing the corresponding command based on the recognized speech.
+1. Clone the repository or download the script.
 
-## 2. Installation
-
-To get started with the Voice Command application, follow these steps:
-
-1. Clone the repository to your local machine:
+2. Install the required libraries using the following command:
    ```
-   git clone https://github.com/your-username/voice-command.git
-   cd voice-command
+   pip install pyautogui speech_recognition pyttsx3 pygame spotipy
    ```
 
-2. Create a virtual environment (optional but recommended):
-   ```
-   python3 -m venv venv
-   source venv/bin/activate   # On Windows, use: venv\Scripts\activate
-   ```
+3. Make sure you have the necessary dependencies for Spotify API interaction. Refer to the Spotify documentation for more details.
 
-3. Install the required dependencies:
+4. Run the script using the following command:
    ```
-   pip install -r requirements.txt
+   python voice_assistant.py
    ```
 
-## 3. Prerequisites
+## Usage
 
-Before running the Voice Command application, you need to set up the following:
+Once the script is running, the voice assistant will listen for a wake word ("hey," "hi," "hello," or "over"). When the wake word is detected, the assistant will respond with a greeting and start listening for your commands.
 
-1. **Google Cloud API Credentials**: Obtain a Google Cloud API key with enabled Speech-to-Text API access. Save the API key to a secure location and set the environment variable `GOOGLE_APPLICATION_CREDENTIALS` to the path of the credentials file.
+Some of the commands the assistant can understand are:
 
-2. **Microphone Access**: Ensure that your system has access to the microphone or an external audio input device.
+- **"pause"**: Pauses the current session. To resume, say the wake word again.
 
-## 4. Usage
+- **"write" or "type"**: Allows you to type text using voice commands.
 
-To run the Voice Command application, execute the following command in the project directory:
+- **"whatsapp"** or **"contact"**: Sends a WhatsApp message to a specified contact.
 
-```
-python voice_command.py
-```
+- **"camera"** or **"open"** or **"click"** or **"picture"**: Opens the camera and clicks a picture.
 
-The application will start listening for your voice commands via the microphone. Simply speak one of the supported commands listed below, and the application will process and execute it accordingly.
+- **"gallery"**: Opens the gallery.
 
-To exit the application, press `Ctrl + C`.
+- **"joke"** or **"dad"**: Tells a random dad joke.
 
-## 5. Supported Commands
+- **"change"** or **"name"**: Updates the name (of the assistant?).
 
-The Voice Command application currently supports the following commands:
+- **"set"** or **"reminder"**: Sets a reminder based on the provided text.
 
-1. **"Open browser"**: Opens the default web browser.
-2. **"Search Google for <query>"**: Initiates a Google search with the specified query.
-3. **"Play music"**: Starts playing your favorite music from a predefined playlist.
-4. **"Check email"**: Launches the email client and opens the inbox.
-5. **"Take a screenshot"**: Captures a screenshot of the entire screen and saves it to the desktop.
-6. **"Close application"**: Closes the currently focused application.
-7. **"Shutdown"**: Shuts down the computer.
+- **"time"** or **"right"**: Tells the current time.
 
-## 6. Customization
+- **"play"** or **"spotify"** or **"song"**: Plays a song on Spotify.
 
-Feel free to customize and extend this project according to your requirements. You can add more voice commands, implement new functionalities, or integrate with other APIs and services.
+- **"shutdown"** or **"system"**: Shuts down the system.
 
-To add new commands, edit the `voice_command.py` file and add a new case in the `process_command` function to handle the speech recognition for the new command.
+## Note
 
-## 7. License
+Please note that the functionality related to WhatsApp and Spotify may require additional configurations and authentication, depending on your setup.
 
-The Voice Command application is licensed under the [MIT License](LICENSE), which allows you to use, modify, and distribute the code freely. Refer to the LICENSE file for more information.
+Feel free to customize the script or add more features as per your requirements!
 
----
-
-Thank you for using the Voice Command application. If you have any questions, feedback, or encounter any issues, please don't hesitate to reach out to us at support@voicecommandapp.com. Happy voice commanding!
+Happy voice commanding!

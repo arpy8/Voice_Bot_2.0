@@ -1,11 +1,14 @@
 import datetime
 from camera import *
+from change_name import update_name
 from message import *
 import pyautogui as pg
 from jokes import dad_joke
 from clock import set_timer
 from chatGPT import chatGPT
 import speech_recognition as sr
+
+from spotify import play_song
 
 playing_song = True
 
