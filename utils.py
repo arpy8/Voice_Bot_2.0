@@ -1,4 +1,6 @@
 import os
+import time
+
 import gtts
 import playsound
 import pyautogui as pg
@@ -24,7 +26,6 @@ def custom_listen():
         with sr.Microphone(device_index=1) as source:
             text = custom_call(source)
             if not None: return text
-
 
 
 def play_sound(path):
@@ -61,6 +62,18 @@ def close_application():
 
 
 def shutdown():
+    speak_print("Shutting down")
     pg.hotkey('ctrl', 'win', 'd')
     pg.hotkey('alt', 'f4')
     pg.press('enter')
+
+
+def lock_system():
+    pg.hotkey('win', 'r')
+    pg.write("cmd")
+    pg.press("enter")
+    time.sleep(0.5)
+    pg.write(os.getenv("LOCK_COMMAND"))
+    pg.press("enter")
+
+

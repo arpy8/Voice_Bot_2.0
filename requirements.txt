@@ -10,4 +10,3 @@ chatgpt~=2.2212.0
 requests~=2.31.0
 playsound~=1.2.2
 toml~=0.10.2
-pywhatkit~=5.4

@@ -31,3 +31,6 @@ HEADERS = {
 DICTIONARY_URL = "https://api.dictionaryapi.dev/api/v2/entries/en/"
 GENDER_URL = "https://api.genderize.io?name="
 
+
+WEATHERSTACK_API = os.getenv("WEATHERSTACK_API")
+WEATHERSTACK_URL = f"httpS://api.weatherstack.com/current?access_key={WEATHERSTACK_API}&query="

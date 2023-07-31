@@ -9,6 +9,7 @@ from selenium.webdriver.common.by import By
 
 def contact_extractor(string):
     phn = "".join([char for char in string if char.isdigit()])
+
     if len(phn) == 10:
         print(f"accepted, {phn}")
         return phn
@@ -58,6 +59,7 @@ def send_whatsapp(phone, message):
 
     pg.hotkey("alt", "f4")
 
+
 # def send_whatsapp2(phone, message):
 #     url_message = urllib.parse.quote(str(message))
 #     whatsapp_url = f"https://wa.me/91{phone}?text={url_message}"
@@ -98,3 +100,18 @@ def send_whatsapp(phone, message):
 #     wt.sendwhatmsg(phone_number, message, (int(current_hour) + int(hour_delay)),
 #                    (int(current_minute) + int(minute_delay)),
 #                    (int(current_second) + int(second_delay)), True, 2)
+
+
+def send_message(text):
+    phone = contact_extractor(text)
+    if phone is None:
+        print("Bot: Invalid contact")
+    else:
+        print("Bot: What message should I send?")
+        try:
+            with sr.Microphone(device_index=3) as source:
+                send_whatsapp(phone, custom_call(source))
+        except AssertionError:
+            with sr.Microphone(device_index=1) as source:
+                send_whatsapp(phone, custom_call(source))
+        print("Bot: Message sent successfully")
