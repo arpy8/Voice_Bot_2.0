@@ -58,10 +58,3 @@ Some of the commands the assistant can understand are:
 
 - **"shutdown"** or **"system"**: Shuts down the system.
 
-## Note
-
-Please note that the functionality related to WhatsApp and Spotify may require additional configurations and authentication, depending on your setup.
-
-Feel free to customize the script or add more features as per your requirements!
-
-Happy voice commanding!
